@@ -6,7 +6,7 @@ const Signup = () => {
   return (
     <>
     <Header/>
-    <>
+    
       <div className='signup'>
         <h1>Sign Up</h1>
         <label for="email">Email</label>
@@ -18,7 +18,7 @@ const Signup = () => {
         <button>Sign Up</button>
         <p>Already have an account? <Link to={"/login"}>Login</Link></p>
       </div>
-    </>
+    
     </>
   )
 }
