@@ -1,5 +1,6 @@
 import React from 'react'
 import Header from './Header'
+import { Link } from 'react-router-dom'
 
 const Main = () => {
   return (
@@ -12,7 +13,7 @@ const Main = () => {
         <h2>
             Create Share and vote in polls
         </h2>
-        <button>Create New Poll</button>
+        <Link to = "/PollForm"><button>Create New Poll</button></Link>
         <input placeholder="Search polls..." type=""></input>
     </div>
     </>
