@@ -1,19 +1,45 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { SeletedPollContext } from "../context/SeletedPoll.jsx";
+import { PollContext } from "../context/PollContext";
+import { useNavigate } from "react-router-dom";
 
-export default function PollPage({question="",options=[]}) {
-  // const question = "Which JavaScript framework do you prefer?";
-  // const options = ["React", "Vue", "Angular", "Svelte"];
+export default function PollPage() {
+  const navigate = useNavigate()
+  const { seletedPoll } = useContext(SeletedPollContext);
+  const { allPoll, setAllPoll } = useContext(PollContext);
 
-  const [votes, setVotes] = useState(Array(options.length).fill(0));
+
+  const selectedPoll = allPoll.find((poll) => poll.id === seletedPoll);
+  const { question, options } = selectedPoll;
+
+
+  const [votes, setVotes] = useState(
+    selectedPoll.votes ? [...selectedPoll.votes] : Array(options.length).fill(0)
+  );
+
   const [selectedOption, setSelectedOption] = useState(null);
-  const [voted, setVoted] = useState(false);
+
+
+  const [voted, setVoted] = useState(selectedPoll.hasVoted);
 
   const handleVote = () => {
     if (selectedOption === null) return;
+
     const newVotes = [...votes];
     newVotes[selectedOption]++;
+
     setVotes(newVotes);
     setVoted(true);
+
+
+    setAllPoll((prev) =>
+      prev.map((poll) =>
+        poll.id === selectedPoll.id
+          ? { ...poll, votes: newVotes, hasVoted: true }
+          : poll
+      )
+    );
+    navigate("/thankyou")
   };
 
   return (
@@ -39,22 +65,9 @@ export default function PollPage({question="",options=[]}) {
         disabled={voted || selectedOption === null}
         className="poll-button"
       >
-        Vote
+        {voted ? "Voted" : "Vote"}
       </button>
 
-        {voted && (
-        <div className="poll-results">
-          <h2 className="poll-results-title">Results:</h2>
-          <ul className="poll-results-list">
-            {options.map((option, index) => (
-              <li key={index} className="poll-result-item">
-                {option}: {votes[index]} vote{votes[index] !== 1 && "s"}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
-
   );
 }
